@@ -2,11 +2,32 @@
 
 {% block body %}
     <h1>Listing {{ listing.id }}</h1>
-    <ul>
-        <li>Title: {{ listing.title }}</li>
-        <li>Description: {{ listing.description }}</li>
-        <li>Starting Bid: {{ listing.starting_bid }} dollars</li>
-    </ul>
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Current Bid</th>
+        </tr>
+            <tr>
+                <td>{{ listing.title }}</td>
+                <td>{{ listing.description }}</td>
+                <td>{{ listing.starting_bid }} dollars</td>
+            </tr>
+    </table>
+
     <a href="{% url 'index' %}">All Listings</a>
+    <br><br>
+
+    <h2>Watchlist Actions: </h2>
+    <ul>
+        {% if user.is_authenticated %}
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit", value="Add to Watchlist">
+            </form>
+        {% else %}
+        {% endif %}
+    </ul>
+    
 
 {% endblock %}

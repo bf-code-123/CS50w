@@ -21,14 +21,18 @@ def create(request):
     return render(request, "auctions/create.html")
 
 def listing(request, listing_id):
+    #page for each listing, linked to listing ID
     listing = Listings.objects.get(id = listing_id)
+    #stores all info about a listing by pulling from table with the given ID
     return render(request, "auctions/listing.html", {
         "listing": listing
+        #passes along all listing data to html
     })
 
 def index(request):
     return render(request, "auctions/index.html", {
         "listings": Listings.objects.all()
+        #passes on a list of all listings to html
     })
 
 

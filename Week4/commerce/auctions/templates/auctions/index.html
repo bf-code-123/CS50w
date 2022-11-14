@@ -3,9 +3,20 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    <ul>
+    <table class="table">
+        <tr>
+            <th>Listing Number</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Current Bid</th>
+        </tr>
         {% for listing in listings %}
-            <li> <a href="{% url 'listing' listing.id %}">Listing {{ listing.id }}: </a>{{ listing.title }}</li>
+            <tr>
+                <td><a href="{% url 'listing' listing.id %}">Listing {{ listing.id }}</a></td>
+                <td>{{ listing.title }}</td>
+                <td>{{ listing.description }}</td>
+                <td>{{ listing.starting_bid }}</td>
+            </tr>
         {% endfor %}
-    </ul>
+    </table>
 {% endblock %}
