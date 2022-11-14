@@ -6,13 +6,15 @@ class User(AbstractUser):
     pass
 
 class Listings(models.Model):
-    date_listed = models.DateField()
     title = models.CharField(max_length=64)
-    description = models.CharField(max_length=236)
+    description = models.CharField(max_length=256)
     starting_bid = models.IntegerField()
     photo = models.URLField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
+    #related name allows to search for all listings for a given user
 
 class Bids(models.Model):
+    amount = models.IntegerField()
     listing = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="bids_via_listing")
     #specify that listing field is a foreign key, meaning it referes to another object (which is Listings)
     #if a listing is deleted, delete all the bids tied to that listing
@@ -22,4 +24,9 @@ class Bids(models.Model):
     #this field is related to User field
     #blank= False, because a Bid cannot have no user
     #related name allows us to pull all bids from a given user
+
+class Comments(models.Model):
+    comment = models.CharField(max_length=128)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments_via_user")
+    listing = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="comments_via_listing")
 
