@@ -6,11 +6,12 @@ class User(AbstractUser):
     pass
 
 class Listings(models.Model):
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=256)
     starting_bid = models.IntegerField()
-    photo = models.URLField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
+    #photo = models.URLField()
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     #related name allows to search for all listings for a given user
 
 class Bids(models.Model):
