@@ -32,20 +32,17 @@ def create(request):
 def listing(request, listing_id):
     #page for each listing, linked to listing ID
     listing = Listing.objects.get(id = listing_id)
-    # if request.method == "POST":
-    #     form = WatchlistForm(request.POST)
-    #     if form.is_valid():
-    #         f = Watchlist()
-    #         f.listing = Listing.objects.get(id = listing_id)
-    #         f.user = request.user
-    #         f.watchlist_bool = True
-    #         f.save()
-    #         #Watchlist.listing.add(listing_id)
-    #         #watchlist = Watchlist(user=request.user, listing=listing_id)
-    #         return HttpResponseRedirect(reverse("listing"))
+    if request.method == "POST":
+        form = WatchlistForm(request.POST)
+        if form.is_valid():
+            f = Watchlist(listing = listing, user=request.user, watchlist_bool=True)
+            f.save()
+            #Watchlist.listing.add(listing_id)
+            #watchlist = Watchlist(user=request.user, listing=listing_id)
+        return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
     #stores all info about a listing by pulling from table with the given ID
-    # else:
-    return render(request, "auctions/listing.html", {
+    else:
+        return render(request, "auctions/listing.html", {
             "listing": listing,
             "form": WatchlistForm()
             #passes along all listing data to html

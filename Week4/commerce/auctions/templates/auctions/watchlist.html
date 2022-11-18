@@ -6,11 +6,15 @@
         <tr>
             <th>User</th>
             <th>Listing</th>
+            <th>Listing Title</th>
         </tr>
+        {% for item in watchlist %}
             <tr>
-                <td>{{ watchlist.user }}</td>
-                <td>{{ watchlist.listing }}</td>
+                <td>{{ item.user }}</td>
+                <td><a href="{% url 'listing' item.listing.id %}">{{ item.listing }}</a></td>
+                <td>{{ item.listing.title }}</td>
             </tr>
+        {% endfor %}
     </table>
 
     <a href="{% url 'index' %}">All Listings</a>

@@ -15,8 +15,8 @@ class Listing(models.Model):
     #related name allows to search for all listings for a given user
 
 class Watchlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="watchlists", default="0")
-    listing = models.ManyToManyField(Listing, related_name="watchlists")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="watchlists", default="")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watchlists", default="")
     watchlist_bool = models.BooleanField(default=False)
 
 class Bid(models.Model):
