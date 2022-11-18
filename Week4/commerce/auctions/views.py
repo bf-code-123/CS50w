@@ -35,12 +35,15 @@ def listing(request, listing_id):
     # if request.method == "POST":
     #     form = WatchlistForm(request.POST)
     #     if form.is_valid():
-    #         watchlist = Watchlist(user=request.user, listing=listing_id) 
-    #         watchlist.save()
+    #         f = Watchlist()
+    #         f.listing = Listing.objects.get(id = listing_id)
+    #         f.user = request.user
+    #         f.watchlist_bool = True
+    #         f.save()
     #         #Watchlist.listing.add(listing_id)
     #         #watchlist = Watchlist(user=request.user, listing=listing_id)
     #         return HttpResponseRedirect(reverse("listing"))
-    # #stores all info about a listing by pulling from table with the given ID
+    #stores all info about a listing by pulling from table with the given ID
     # else:
     return render(request, "auctions/listing.html", {
             "listing": listing,
