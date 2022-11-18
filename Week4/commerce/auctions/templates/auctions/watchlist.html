@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>Watchlist</h1>
+    <table class="table">
+        <tr>
+            <th>User</th>
+            <th>Listing</th>
+        </tr>
+            <tr>
+                <td>{{ watchlist.user }}</td>
+                <td>{{ watchlist.listing }}</td>
+            </tr>
+    </table>
+
+    <a href="{% url 'index' %}">All Listings</a>
+
+{% endblock %}

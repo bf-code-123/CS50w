@@ -14,6 +14,11 @@ class Listings(models.Model):
     #user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     #related name allows to search for all listings for a given user
 
+class Watchlist(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
+    listing = models.ManyToManyField(Listings, blank=True, related_name="passengers")
+
 class Bids(models.Model):
     amount = models.IntegerField()
     listing = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="bids_via_listing")
