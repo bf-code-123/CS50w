@@ -5,23 +5,23 @@ from django.db import models
 class User(AbstractUser):
     pass
 
-class Listings(models.Model):
-    id = models.AutoField(primary_key=True)
+class Listing(models.Model):
+    #id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=256)
     starting_bid = models.IntegerField()
     #photo = models.URLField()
-    #user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
+    #user = models.ManyToManyField(User, through='Watchlist')
     #related name allows to search for all listings for a given user
 
 class Watchlist(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
-    listing = models.ManyToManyField(Listings, blank=True, related_name="passengers")
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="watchlists")
+    #listing = models.ForeignKey(Listings, on_delete=models.CASCADE, blank=True, related_name="watchlists")
+    watchlist = models.BooleanField(default=False)
 
-class Bids(models.Model):
+class Bid(models.Model):
     amount = models.IntegerField()
-    listing = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="bids_via_listing")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids_via_listing")
     #specify that listing field is a foreign key, meaning it referes to another object (which is Listings)
     #if a listing is deleted, delete all the bids tied to that listing
     #related name gives us a way to search for all bids for a given listing
@@ -31,8 +31,8 @@ class Bids(models.Model):
     #blank= False, because a Bid cannot have no user
     #related name allows us to pull all bids from a given user
 
-class Comments(models.Model):
+class Comment(models.Model):
     comment = models.CharField(max_length=128)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments_via_user")
-    listing = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="comments_via_listing")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments_via_listing")
 

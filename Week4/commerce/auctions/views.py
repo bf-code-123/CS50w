@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django import forms
 
-from .models import User, Listings, Bids, Comments, Watchlist
+from .models import User, Listing, Bid, Comment, Watchlist
 
 class WatchlistForm(forms.Form):
     Add_to_Wishlist = forms.BooleanField()
@@ -24,25 +24,25 @@ def create(request):
         # ser = 
         #TO DO: URL for photo
 
-        listing = Listings(title=title, description=description, starting_bid=starting_bid)
+        listing = Listing(title=title, description=description, starting_bid=starting_bid)
         listing.save()
         return HttpResponseRedirect(reverse('index'))
     return render(request, "auctions/create.html")
 
 def listing(request, listing_id):
     #page for each listing, linked to listing ID
-    listing = Listings.objects.get(id = listing_id)
-    if request.method == "POST":
-        form = WatchlistForm(request.POST)
-        if form.is_valid():
-            watchlist = Watchlist(user=request.user, listing=listing_id) 
-            watchlist.save()
-            #Watchlist.listing.add(listing_id)
-            #watchlist = Watchlist(user=request.user, listing=listing_id)
-            return HttpResponseRedirect(reverse("listing"))
-    #stores all info about a listing by pulling from table with the given ID
-    else:
-        return render(request, "auctions/listing.html", {
+    listing = Listing.objects.get(id = listing_id)
+    # if request.method == "POST":
+    #     form = WatchlistForm(request.POST)
+    #     if form.is_valid():
+    #         watchlist = Watchlist(user=request.user, listing=listing_id) 
+    #         watchlist.save()
+    #         #Watchlist.listing.add(listing_id)
+    #         #watchlist = Watchlist(user=request.user, listing=listing_id)
+    #         return HttpResponseRedirect(reverse("listing"))
+    # #stores all info about a listing by pulling from table with the given ID
+    # else:
+    return render(request, "auctions/listing.html", {
             "listing": listing,
             "form": WatchlistForm()
             #passes along all listing data to html
@@ -50,7 +50,7 @@ def listing(request, listing_id):
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "listings": Listings.objects.all()
+        "listings": Listing.objects.all()
         #passes on a list of all listings to html
     })
 
