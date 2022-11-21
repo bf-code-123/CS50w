@@ -4,11 +4,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import User, Listing, Bid, Comment, Watchlist
 
-class WatchlistForm(forms.Form):
+class AddWatchlist(forms.Form):
     Add_to_Wishlist = forms.BooleanField()
+class RemoveWatchlist(forms.Form):
+    Remove_from_Wishlist = forms.BooleanField()
+class BiddingForm(forms.Form):
+    Enter_Bid = forms.IntegerField()
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
@@ -32,21 +37,38 @@ def create(request):
 def listing(request, listing_id):
     #page for each listing, linked to listing ID
     listing = Listing.objects.get(id = listing_id)
+    #stores all info about a listing by pulling from table with the given ID
     if request.method == "POST":
-        form = WatchlistForm(request.POST)
-        if form.is_valid():
+        add_form = AddWatchlist(request.POST)
+        remove_form = RemoveWatchlist(request.POST)
+        if add_form.is_valid():
             f = Watchlist(listing = listing, user=request.user, watchlist_bool=True)
             f.save()
-            #Watchlist.listing.add(listing_id)
-            #watchlist = Watchlist(user=request.user, listing=listing_id)
+            #save new data row into Watchlist model with listing, user, and watchlist boolean on
+        if remove_form.is_valid():
+            f = Watchlist.objects.filter(listing = listing, user=request.user)
+            f.delete()
+            #this was removed from watchlist, so delete from model
         return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
-    #stores all info about a listing by pulling from table with the given ID
+    
     else:
-        return render(request, "auctions/listing.html", {
-            "listing": listing,
-            "form": WatchlistForm()
-            #passes along all listing data to html
-        })
+    #if request method is GET
+        try:
+            watchlist = Watchlist.objects.get(user = request.user, listing = listing)
+            #see if this listing and user has entry in watchlist model
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "bidding_form": BiddingForm(),
+                "form": RemoveWatchlist()
+            })
+                # give them an option to delete
+        except ObjectDoesNotExist: 
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "bidding_form": BiddingForm(),
+                "form": AddWatchlist()
+            })
+        #otherwise the data does not exist, so give them option to add
 
 def index(request):
     return render(request, "auctions/index.html", {

@@ -21,12 +21,11 @@ class Watchlist(models.Model):
 
 class Bid(models.Model):
     amount = models.IntegerField()
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids_via_listing")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids", default="")
     #specify that listing field is a foreign key, meaning it referes to another object (which is Listings)
     #if a listing is deleted, delete all the bids tied to that listing
     #related name gives us a way to search for all bids for a given listing
-    user = models.ManyToManyField(User, blank=False, related_name="bids_via_user")
-    #specify that bidder field has many to many relationship with users
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="bids", default="")
     #this field is related to User field
     #blank= False, because a Bid cannot have no user
     #related name allows us to pull all bids from a given user

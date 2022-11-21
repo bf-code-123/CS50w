@@ -18,12 +18,18 @@
     <a href="{% url 'index' %}">All Listings</a>
     <br><br>
 
-    <h2>Watchlist Actions: </h2>
+    <h2>User Actions: </h2>
     <ul>
         {% if user.is_authenticated %}
             <form action="{% url 'listing' listing.id %}" method="post">
                 {% csrf_token %}
                 {{ form }}
+                <input type="submit", value="submit">
+            </form>
+            <!-- TODO: add the bidding form-->
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}
+                {{ bidding_form }}
                 <input type="submit", value="submit">
             </form>
         {% else %}
