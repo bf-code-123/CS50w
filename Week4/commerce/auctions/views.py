@@ -9,9 +9,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import User, Listing, Bid, Comment, Watchlist
 
 class AddWatchlist(forms.Form):
-    Add_to_Wishlist = forms.BooleanField()
+    Add_to_Watchlist = forms.BooleanField()
 class RemoveWatchlist(forms.Form):
-    Remove_from_Wishlist = forms.BooleanField()
+    Remove_from_Watchlist = forms.BooleanField()
 class BiddingForm(forms.Form):
     Enter_Bid = forms.IntegerField()
 
@@ -53,13 +53,14 @@ def listing(request, listing_id):
         if new_bid.is_valid():
             new_bid = new_bid.cleaned_data["Enter_Bid"]
             #store cleaned input data in variable
-            bid = Bid(amount = new_bid, user = request.user, listing = listing)
-            bid.save()
-            #save new entry into Bid model
+            
             if new_bid <= listing.starting_bid:
                 return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
                 #redirect if bid less than current bid
             else:
+                bid = Bid(amount = new_bid, user = request.user, listing = listing)
+                bid.save()
+                #save new entry into Bid model
                 Listing.objects.filter(id = listing_id).update(starting_bid = new_bid)      
                 #update current price/bid if bid is greater than
         return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
