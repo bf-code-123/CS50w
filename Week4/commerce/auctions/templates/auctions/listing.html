@@ -35,6 +35,20 @@
         {% else %}
         {% endif %}
     </ul>
+
+    <h2>Bid History:</h2>
+    <table class="table">
+        <tr>
+            <th>User</th>
+            <th>Bid Amount</th>
+        </tr>
+        {% for bid in bid_history %}
+            <tr>
+                <td>{{ bid.user }}</td>
+                <td>{{ bid.amount }} dollars</td>
+            </tr>
+        {% endfor %}
+    </table>
     
 
 {% endblock %}

@@ -41,6 +41,7 @@ def listing(request, listing_id):
     if request.method == "POST":
         add_form = AddWatchlist(request.POST)
         remove_form = RemoveWatchlist(request.POST)
+        new_bid = BiddingForm(request.POST)
         if add_form.is_valid():
             f = Watchlist(listing = listing, user=request.user, watchlist_bool=True)
             f.save()
@@ -49,6 +50,18 @@ def listing(request, listing_id):
             f = Watchlist.objects.filter(listing = listing, user=request.user)
             f.delete()
             #this was removed from watchlist, so delete from model
+        if new_bid.is_valid():
+            new_bid = new_bid.cleaned_data["Enter_Bid"]
+            #store cleaned input data in variable
+            bid = Bid(amount = new_bid, user = request.user, listing = listing)
+            bid.save()
+            #save new entry into Bid model
+            if new_bid <= listing.starting_bid:
+                return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
+                #redirect if bid less than current bid
+            else:
+                Listing.objects.filter(id = listing_id).update(starting_bid = new_bid)      
+                #update current price/bid if bid is greater than
         return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
     
     else:
@@ -59,14 +72,17 @@ def listing(request, listing_id):
             return render(request, "auctions/listing.html", {
                 "listing": listing,
                 "bidding_form": BiddingForm(),
-                "form": RemoveWatchlist()
+                "form": RemoveWatchlist(),
+                "bid_history": Bid.objects.filter(listing = listing)
             })
                 # give them an option to delete
         except ObjectDoesNotExist: 
             return render(request, "auctions/listing.html", {
                 "listing": listing,
                 "bidding_form": BiddingForm(),
-                "form": AddWatchlist()
+                "form": AddWatchlist(),
+                "bid_history": Bid.objects.filter(listing = listing)
+                #TO DO look at django documentation for label
             })
         #otherwise the data does not exist, so give them option to add
 
