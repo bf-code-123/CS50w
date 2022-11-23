@@ -10,8 +10,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=256)
     starting_bid = models.IntegerField()
-    #photo = models.URLField()
-    #user = models.ManyToManyField(User, through='Watchlist')
+    photo = models.URLField(blank=True)
     #related name allows to search for all listings for a given user
 
 class Watchlist(models.Model):

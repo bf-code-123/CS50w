@@ -13,7 +13,12 @@ class AddWatchlist(forms.Form):
 class RemoveWatchlist(forms.Form):
     Remove_from_Watchlist = forms.BooleanField()
 class BiddingForm(forms.Form):
-    Enter_Bid = forms.IntegerField()
+    Enter_Bid = forms.IntegerField(error_messages={'required': 'New bid must be greater than current bid'})
+class Create(forms.ModelForm):
+    class Meta:
+        model = Listing
+        fields = '__all__'
+
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
@@ -22,17 +27,18 @@ def watchlist(request):
 
 def create(request):
     if request.method == "POST":
-        title = request.POST["title"]
-        description = request.POST["description"]
-        starting_bid = int(request.POST["starting_bid"])
-        #TO DO: add the user
-        # ser = 
-        #TO DO: URL for photo
-
-        listing = Listing(title=title, description=description, starting_bid=starting_bid)
-        listing.save()
-        return HttpResponseRedirect(reverse('index'))
-    return render(request, "auctions/create.html")
+        form = Create(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            return render(request, "auctions/create.html", {
+                "form":form
+                #returns the form with the pre-populated data
+            })
+    return render(request, "auctions/create.html", {
+        "form":Create
+    })
 
 def listing(request, listing_id):
     #page for each listing, linked to listing ID
