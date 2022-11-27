@@ -5,35 +5,44 @@ from django.shortcuts import render
 from django.urls import reverse
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
+from django.forms import ModelForm, Textarea
 
 from .models import User, Listing, Bid, Comment, Watchlist
 
-class AddWatchlist(forms.Form):
-    Add_to_Watchlist = forms.BooleanField()
-class RemoveWatchlist(forms.Form):
-    Remove_from_Watchlist = forms.BooleanField()
 class BiddingForm(forms.Form):
     Enter_Bid = forms.IntegerField(error_messages={'required': 'New bid must be greater than current bid'})
 class Create(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = '__all__'
+        exclude = ['creator']
+        widgets = {
+            'description': Textarea(attrs={'cols': 40, 'rows': 10}),
+        }
+class Comment(forms.ModelForm):
+    class Meta:
+        model = Comment
+        exclude = ['user', 'listing']
+        widgets = {
+            'comment': Textarea(attrs={'cols': 40, 'rows': 10}),
+        }
 
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
-        "watchlist": Watchlist.objects.all()
+        "watchlist": Watchlist.objects.filter(user=request.user)
     })
 
 def create(request):
     if request.method == "POST":
         form = Create(request.POST)
         if form.is_valid():
-            form.save()
+            new_listing = form.save(commit=False)
+            new_listing.creator = request.user
+            new_listing.save()
             return HttpResponseRedirect(reverse('index'))
         else:
             return render(request, "auctions/create.html", {
-                "form":form
+                "form":new_listing
                 #returns the form with the pre-populated data
             })
     return render(request, "auctions/create.html", {
@@ -45,17 +54,15 @@ def listing(request, listing_id):
     listing = Listing.objects.get(id = listing_id)
     #stores all info about a listing by pulling from table with the given ID
     if request.method == "POST":
-        add_form = AddWatchlist(request.POST)
-        remove_form = RemoveWatchlist(request.POST)
-        new_bid = BiddingForm(request.POST)
-        if add_form.is_valid():
-            f = Watchlist(listing = listing, user=request.user, watchlist_bool=True)
-            f.save()
-            #save new data row into Watchlist model with listing, user, and watchlist boolean on
-        if remove_form.is_valid():
+        if "Watchlist" in request.POST:
             f = Watchlist.objects.filter(listing = listing, user=request.user)
-            f.delete()
-            #this was removed from watchlist, so delete from model
+            if f.exists():
+                f.delete()
+            else:
+                f = Watchlist(listing = listing, user=request.user)
+                f.save()
+
+        new_bid = BiddingForm(request.POST)
         if new_bid.is_valid():
             new_bid = new_bid.cleaned_data["Enter_Bid"]
             #store cleaned input data in variable
@@ -73,25 +80,13 @@ def listing(request, listing_id):
     
     else:
     #if request method is GET
-        try:
-            watchlist = Watchlist.objects.get(user = request.user, listing = listing)
-            #see if this listing and user has entry in watchlist model
-            return render(request, "auctions/listing.html", {
-                "listing": listing,
-                "bidding_form": BiddingForm(),
-                "form": RemoveWatchlist(),
-                "bid_history": Bid.objects.filter(listing = listing)
-            })
-                # give them an option to delete
-        except ObjectDoesNotExist: 
-            return render(request, "auctions/listing.html", {
-                "listing": listing,
-                "bidding_form": BiddingForm(),
-                "form": AddWatchlist(),
-                "bid_history": Bid.objects.filter(listing = listing)
-                #TO DO look at django documentation for label
-            })
-        #otherwise the data does not exist, so give them option to add
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "bidding_form": BiddingForm(),
+            "bid_history": Bid.objects.filter(listing = listing),
+            "comments": Comment.objects.filter(listing = listing),
+            "user":request.user
+        })
 
 def index(request):
     return render(request, "auctions/index.html", {
