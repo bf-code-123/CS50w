@@ -23,7 +23,7 @@
     <h2>User Actions: </h2>
     <ul>
         {% if user.is_authenticated %}
-            {% if listing.creator != user %}
+            {% if listing.creator != user and listing.active == True %}
                 <form action="{% url 'listing' listing.id %}" method="post">
                     {% csrf_token %}
                     <input type="submit", value="Watchlist Toggle", name="Watchlist">
@@ -34,11 +34,31 @@
                     {{ bidding_form }}
                     <input type="submit", value="Bid">
                 </form>
-            {% else %} 
-                <form action="{% url 'listing' listing.id %}" method="post" name="CloseAuction">
+            {% elif listing.creator != user and listing.active == False %}
+                {% if user == winning_user %}
+                    <br>
+                    <h3>    
+                        Congrats! You have won this auction!
+                    </h3>
+                    <br>
+                {% else %}
+                    <br>
+                    <h3>
+                        This auction is CLOSED
+                    </h3>
+                    <br>
+                {% endif %}
+            {% elif listing.creator ==  user and listing.active == True %} 
+                <form action="{% url 'listing' listing.id %}" method="post">
                     {% csrf_token %}
-                    <input type="submit", value="Close Auction">
+                    <input type="submit", value="Close Auction", name="CloseAuction">
                 </form>
+            {% elif listing.creator ==  user and listing.active == False %}
+                <br>
+                <h3>
+                    You have CLOSED this auction!
+                </h3>
+                <br>
             {% endif %}
             <br>
             <form action="{% url 'listing' listing.id %}" method="post">

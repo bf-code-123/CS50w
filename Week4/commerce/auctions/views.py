@@ -70,6 +70,10 @@ def listing(request, listing_id):
                 f = Watchlist(listing = listing, user=request.user)
                 #otherwise save a new row in the watchlist model 
                 f.save()
+        
+        if "CloseAuction" in request.POST:
+            f = Listing.objects.filter(id = listing_id).update(active = False)
+            #update the boolean field to false
 
         new_bid = BiddingForm(request.POST)
         #take in data user submitted in biddingform and save it
@@ -104,7 +108,8 @@ def listing(request, listing_id):
             "bid_history": Bid.objects.filter(listing = listing),
             "comment_form": CommentForm(),
             "comments": Comment.objects.filter(listing = listing),
-            "user":request.user
+            "user":request.user,
+            "winning_user": getattr(Bid.objects.filter(listing=listing).last(), 'user', None)
         })
 
 def index(request):
