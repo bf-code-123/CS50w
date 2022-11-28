@@ -40,6 +40,7 @@
                     <input type="submit", value="Close Auction">
                 </form>
             {% endif %}
+            <br>
             <form action="{% url 'listing' listing.id %}" method="post">
                 {% csrf_token %}
                 {{ comment_form }}
@@ -74,7 +75,7 @@
         {% for comment in comments %}
             <tr>
                 <td>{{ comment.user }}</td>
-                <td>{{ comment.text }}</td>
+                <td>{{ comment.comment }}</td>
             </tr>
         {% endfor %}
     </table>

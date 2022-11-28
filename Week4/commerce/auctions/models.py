@@ -12,6 +12,7 @@ class Listing(models.Model):
     starting_bid = models.IntegerField()
     photo = models.URLField(blank=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="listings", default="")
+    active = models.BooleanField(default=True)
     #related name allows to search for all listings for a given user
 
 class Watchlist(models.Model):
