@@ -4,7 +4,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
-from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm, Textarea
 
 from .models import User, Listing, Bid, Comment, Watchlist
