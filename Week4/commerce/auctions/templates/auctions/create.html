@@ -5,7 +5,16 @@
 
     <form action="{% url 'create' %}" method="post">
         {% csrf_token %}
-        {{ form }}
+        <div> Title: {{ form.title }} </div>
+        <br>
+        <div> Description: <br> {{ form.description }} </div>
+        <br>
+        <div> Starting Bid: <br> {{ form.starting_bid }} </div>
+        <br>
+        <div> Attach a Photo: <br> {{ form.photo }} </div>
+        <br>
+        <div> Category: <br> {{ form.category }} </div>
+        <br>
         <!-- put each aspect in it's own div and new line-->
         <input type="submit", value="Create">
     </form>

@@ -9,6 +9,7 @@
             <th>Title</th>
             <th>Description</th>
             <th>Current Bid</th>
+            <th>Category</th>
         </tr>
         {% for listing in listings %}
             <tr>
@@ -16,6 +17,7 @@
                 <td>{{ listing.title }}</td>
                 <td>{{ listing.description }}</td>
                 <td>{{ listing.starting_bid }}</td>
+                <td><a hred="{% url 'categry' listing.category %}">{{ listing.category }}</a></td>
             </tr>
         {% endfor %}
     </table>

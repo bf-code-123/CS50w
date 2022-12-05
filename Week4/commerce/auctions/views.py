@@ -13,10 +13,11 @@ class BiddingForm(forms.Form):
 class CreateForm(forms.ModelForm):
     class Meta:
         model = Listing
-        exclude = ['creator']
+        exclude = ['creator','active']
         widgets = {
             'description': Textarea(attrs={'cols': 40, 'rows': 10}),
         }
+        
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment

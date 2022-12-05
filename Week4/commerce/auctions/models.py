@@ -1,6 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+CATEGORY_CHOICES = (
+    ('fashion','FASHION'),
+    ('toys', 'TOYS'),
+    ('electronics','ELECTRONICS'),
+    ('home','HOME'),
+    ('pet','PET'),
+)
 
 class User(AbstractUser):
     pass
@@ -13,6 +20,7 @@ class Listing(models.Model):
     photo = models.URLField(blank=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="listings", default="")
     active = models.BooleanField(default=True)
+    category = models.CharField(max_length=20, blank=True, choices=CATEGORY_CHOICES)
     #related name allows to search for all listings for a given user
 
 class Watchlist(models.Model):
