@@ -112,9 +112,15 @@ def listing(request, listing_id):
             "winning_user": getattr(Bid.objects.filter(listing=listing).last(), 'user', None)
         })
 
-def categories(request, category_name=None):
+def categories(request):
     return render(request, "auctions/categories.html", {
-        "categories": Listing.objects.filter(category = category_name)
+        "categories": Listing.objects.all()
+    })
+
+def category_name(request, category_name):
+    category = Listing.objects.filter(category=category_name)
+    return render(request, "auctions/category_name.html",{
+        "category":category
     })
 
 def index(request):
