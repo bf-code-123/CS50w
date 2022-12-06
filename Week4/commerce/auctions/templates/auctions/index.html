@@ -17,7 +17,7 @@
                 <td>{{ listing.title }}</td>
                 <td>{{ listing.description }}</td>
                 <td>{{ listing.starting_bid }}</td>
-                <td><a hred="{% url 'categry' listing.category %}">{{ listing.category }}</a></td>
+                <td>{{ listing.category }}</a></td>
             </tr>
         {% endfor %}
     </table>

@@ -17,7 +17,7 @@ class CreateForm(forms.ModelForm):
         widgets = {
             'description': Textarea(attrs={'cols': 40, 'rows': 10}),
         }
-        
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -111,6 +111,11 @@ def listing(request, listing_id):
             "user":request.user,
             "winning_user": getattr(Bid.objects.filter(listing=listing).last(), 'user', None)
         })
+
+def categories(request, category_name=None):
+    return render(request, "auctions/categories.html", {
+        "categories": Listing.objects.filter(category = category_name)
+    })
 
 def index(request):
     return render(request, "auctions/index.html", {
