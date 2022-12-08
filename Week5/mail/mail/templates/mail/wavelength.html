@@ -1,0 +1,56 @@
+{% extends "mail/layout.html" %}
+
+<!-- HTML for the game board -->
+<div id="board">
+    <div id="question">Where is the target?</div>
+    <div id="scale">
+      <div id="left-end">Left</div>
+      <div id="pointer"></div>
+      <div id="right-end">Right</div>
+    </div>
+    <button id="ready-button">Ready</button>
+  </div>
+  <!-- JavaScript for the game logic -->
+  <script>
+    // function to generate a random position on the scale
+    function getRandomPosition() {
+      return Math.random();
+    }
+  
+    // function to set the pointer to a given position on the scale
+    function setPointer(position) {
+      var scale = document.getElementById('scale');
+      var pointer = document.getElementById('pointer');
+      var scaleWidth = scale.offsetWidth;
+      var pointerWidth = pointer.offsetWidth;
+  
+      // calculate the left position of the pointer
+      var left = position * (scaleWidth - pointerWidth);
+  
+      // set the left property of the pointer element
+      pointer.style.left = left + 'px';
+    }
+  
+    // generate a random position and set the pointer
+    var position = getRandomPosition();
+    setPointer(position);
+  
+    // add event listener to the ready button to reveal the target
+    var readyButton = document.getElementById('ready-button');
+    readyButton.addEventListener('click', function() {
+      // prompt the user for their guess
+      var guess = prompt('Where is the target?');
+  
+      // calculate the distance between the guess and the actual position
+      var distance = Math.abs(guess - position);
+  
+      // give feedback based on how close the guess was to the target
+      if (distance < 0.1) {
+        alert('Correct! You scored 10 points.');
+      } else if (distance < 0.2) {
+        alert('Close! You scored 5 points.');
+      } else {
+        alert('Incorrect. You scored 0 points.');
+      }
+    });
+  </script>

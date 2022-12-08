@@ -25,7 +25,7 @@ function compose_email() {
   // Disable submit button by default:
   //submit.disable = true;
 
-  document.querySelector('#compose-view').onsubmit = () => {
+  document.querySelector('#compose-form').onsubmit = () => {
 
     const recipient = newRecipient.value;
     const subject = newSubject.value;
@@ -48,12 +48,15 @@ function compose_email() {
     recipient = '';
     subject = '';
     body = '';
+
+    return false;
   }
   // Clear out composition fields
   // document.querySelector('#compose-recipients').value = '';
   // document.querySelector('#compose-subject').value = '';
   // document.querySelector('#compose-body').value = '';
 }
+
 
 function load_mailbox(mailbox) {
   
