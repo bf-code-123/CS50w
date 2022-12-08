@@ -16,10 +16,43 @@ function compose_email() {
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
+  //select inputs and submit button to be used later:
+  const newRecipient = document.querySelector('#compose-recipients');
+  const newSubject = document.querySelector('#compose-subject');
+  const newBody = document.querySelector('#compose-body');
+  const newSubmit = document.querySelector('#compose_submit');
+
+  // Disable submit button by default:
+  //submit.disable = true;
+
+  document.querySelector('#compose-view').onsubmit = () => {
+
+    const recipient = newRecipient.value;
+    const subject = newSubject.value;
+    const body = newBody.value;
+    
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify({
+          recipients: recipient,
+          subject: subject,
+          body: body
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+        // Print result
+        console.log(result);
+    });
+
+    recipient = '';
+    subject = '';
+    body = '';
+  }
   // Clear out composition fields
-  document.querySelector('#compose-recipients').value = '';
-  document.querySelector('#compose-subject').value = '';
-  document.querySelector('#compose-body').value = '';
+  // document.querySelector('#compose-recipients').value = '';
+  // document.querySelector('#compose-subject').value = '';
+  // document.querySelector('#compose-body').value = '';
 }
 
 function load_mailbox(mailbox) {
