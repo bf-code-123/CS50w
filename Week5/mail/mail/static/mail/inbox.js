@@ -112,6 +112,9 @@ function load_mailbox(mailbox) {
           trow.appendChild(cell);
 
           //  can't figure out how to iterate on the second variable
+          // link here
+          // https://www.geeksforgeeks.org/how-to-convert-json-data-to-a-html-table-using-javascript-jquery/
+          
           // for (j = 0; j < header_cols.length; j++) {
           //   var cell = document.createElement('td');
           //   cell.innerHTML = emails[i].sender;
