@@ -69,23 +69,28 @@ function load_mailbox(mailbox) {
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
   if (mailbox === 'inbox') {
-    // Create a table element
-    const inbox_table = document.createElement('table');
-    inbox_table.setAttribute("id", "inbox_table");
-    inbox_table.setAttribute("class", "table");
-    document.querySelector('#emails-view').append(inbox_table);
+    // // Create a table element
+    // const inbox_table = document.createElement('table');
+    // inbox_table.setAttribute("id", "inbox_table");
+    // inbox_table.setAttribute("class", "table");
+    // document.querySelector('#emails-view').append(inbox_table);
     
-    // Create table row tr element of a table
-    var inbox_header_row = document.createElement('tr');
-    inbox_table.appendChild(inbox_header_row);
+    // // Create table row tr element of a table
+    // var inbox_header_row = document.createElement('tr');
+    // inbox_table.appendChild(inbox_header_row);
 
-    // Create headers in first row
-    var header_cols = ["sender", "body", "timestamp"];
-    for (var i = 0; i < header_cols.length; i++) {
-      var theader = document.createElement("th");
-      theader.innerHTML = header_cols[i];
-      inbox_header_row.appendChild(theader)
-    }
+    // // Create headers in first row
+    // var header_cols = ["sender", "body", "timestamp"];
+    // for (var i = 0; i < header_cols.length; i++) {
+    //   var theader = document.createElement("th");
+    //   theader.innerHTML = header_cols[i];
+    //   inbox_header_row.appendChild(theader)
+    // } 
+    
+    //create the inbox
+    var inbox = document.createElement('div');
+    inbox.setAttribute("class","container");
+    document.querySelector('#emails-view').append(inbox);
     
     fetch('/emails/inbox')
 
@@ -98,31 +103,22 @@ function load_mailbox(mailbox) {
         for (i = 0; i < emails.length; i++) {
 
           //make a row
-          var trow = document.createElement('tr');
-          inbox_table.appendChild(trow);
+          var email = document.createElement('div');
+          email.setAttribute("class","row email_box");
+          inbox.appendChild(email);
           //populate the table in each row
-          var cell = document.createElement('td');
+          var cell = document.createElement('div');
+          cell.setAttribute("class","col-sm");
           cell.innerHTML = emails[i].sender;
-          trow.appendChild(cell);
-          var cell = document.createElement('td');
+          email.appendChild(cell);
+          var cell = document.createElement('div');
+          cell.setAttribute("class","col-sm");
           cell.innerHTML = emails[i].body;
-          trow.appendChild(cell);
-          var cell = document.createElement('td');
+          email.appendChild(cell);  
+          var cell = document.createElement('div');
+          cell.setAttribute("class","col-sm");
           cell.innerHTML = emails[i].timestamp;
-          trow.appendChild(cell);
-
-          //  can't figure out how to iterate on the second variable
-          // link here
-          // https://www.geeksforgeeks.org/how-to-convert-json-data-to-a-html-table-using-javascript-jquery/
-          
-          // for (j = 0; j < header_cols.length; j++) {
-          //   var cell = document.createElement('td');
-          //   cell.innerHTML = emails[i].sender;
-          //   cell.innerHTML = emails[i].body;
-          //   cell.innerHTML = emails[i].timestamp;
-          //   trow.appendChild(cell);
-          // }
-    
+          email.appendChild(cell);
         }
     })
   }
