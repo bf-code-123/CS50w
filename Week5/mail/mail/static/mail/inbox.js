@@ -15,6 +15,7 @@ function compose_email() {
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
+  document.querySelector('#email-details-view').style.display = 'none';
 
   const recipients_field = document.querySelector('#compose-recipients');
   const subject_field = document.querySelector('#compose-subject');
@@ -64,6 +65,7 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#email-details-view').style.display = 'none';
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -105,7 +107,10 @@ function load_mailbox(mailbox) {
           //make a row
           var email = document.createElement('div');
           email.setAttribute("class","row email_box");
+          //add to inbox div
           inbox.appendChild(email);
+          
+
           //populate the table in each row
           var cell = document.createElement('div');
           cell.setAttribute("class","col-sm");
@@ -119,6 +124,24 @@ function load_mailbox(mailbox) {
           cell.setAttribute("class","col-sm");
           cell.innerHTML = emails[i].timestamp;
           email.appendChild(cell);
+
+          //add an event listener to show email details if row is clicked
+          email.onclick = () => {
+            //hide both other views
+            document.querySelector('#compose-view').style.display = 'none';
+            document.querySelector('#emails-view').style.display = 'none';
+            document.querySelector('#email-details-view').style.display = 'block';
+
+            //create the inbox
+            var details = document.createElement('div');
+            details.setAttribute("class","container email_details");
+            details.innerHTML = "sample email details";
+            document.querySelector('#email-details-view').append(details);
+
+            //clear the above
+            //document.querySelectorAll('#email_details').innerHTML = '';
+
+          }
         }
     })
   }
@@ -128,8 +151,4 @@ function load_mailbox(mailbox) {
   else if (mailbox === 'archive') {
     document.querySelector('#emails-view').innerHTML = `<h4> archive test </h4>`;
   }
-
-
-
-
 }
