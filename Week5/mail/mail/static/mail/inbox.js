@@ -17,6 +17,10 @@ function compose_email() {
   document.querySelector('#compose-view').style.display = 'block';
   document.querySelector('#email-details-view').style.display = 'none';
 
+  //clear the email details
+  document.querySelectorAll('#email_details').innerHTML = '';
+  document.querySelector('#email-details-view').innerHTML = '';
+
   const recipients_field = document.querySelector('#compose-recipients');
   const subject_field = document.querySelector('#compose-subject');
   const body_field = document.querySelector('#compose-body');
@@ -67,6 +71,9 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#email-details-view').style.display = 'none';
 
+  //clear the email details
+  document.querySelectorAll('#email_details').innerHTML = '';
+
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
@@ -88,6 +95,10 @@ function load_mailbox(mailbox) {
     //   theader.innerHTML = header_cols[i];
     //   inbox_header_row.appendChild(theader)
     // } 
+
+    //clear the email details
+    document.querySelectorAll('#email_details').innerHTML = '';
+    document.querySelector('#email-details-view').innerHTML = '';
     
     //create the inbox
     var inbox = document.createElement('div');
@@ -105,11 +116,13 @@ function load_mailbox(mailbox) {
         for (i = 0; i < emails.length; i++) {
 
           //make a row
-          var email = document.createElement('div');
+          const email = document.createElement('div');
           email.setAttribute("class","row email_box");
           //add to inbox div
           inbox.appendChild(email);
           
+          //give div the same ID as the email in the div
+          email.setAttribute("id",emails[i].id);
 
           //populate the table in each row
           var cell = document.createElement('div');
@@ -132,15 +145,45 @@ function load_mailbox(mailbox) {
             document.querySelector('#emails-view').style.display = 'none';
             document.querySelector('#email-details-view').style.display = 'block';
 
-            //create the inbox
-            var details = document.createElement('div');
-            details.setAttribute("class","container email_details");
-            details.innerHTML = "sample email details";
-            document.querySelector('#email-details-view').append(details);
+            //get details from 1 email, passing in the ID from the div
+            fetch(`/emails/${email.id}`)
+            .then(response => response.json())
+            .then(email => {
+                // Print email
+                console.log(email);
 
-            //clear the above
-            //document.querySelectorAll('#email_details').innerHTML = '';
+                //create the inbox
+                const details = document.createElement('div');
+                details.setAttribute("class", "container");
+                details.setAttribute("id", "email_details");
+                details.innerHTML = ('Here are the email details:');
+                document.querySelector('#email-details-view').appendChild(details);
 
+                const sender = document.createElement('text');
+                const recipient = document.createElement('text');
+                const subject = document.createElement('text');
+                const timestamp = document.createElement('text');
+                const space1 = document.createElement('br');
+                const space2 = document.createElement('br');
+                const space3 = document.createElement('br');
+                const space4 = document.createElement('br');
+                const space5 = document.createElement('br');
+
+                sender.innerHTML = (`Sender: ${email.sender}`);
+                recipient.innerHTML = (`Recipient: ${email.recipients}`);
+                subject.innerHTML = (`Subject: ${email.subject}`);
+                timestamp.innerHTML = (`Timestamp: ${email.timestamp}`);
+                
+                document.querySelector('#email_details').appendChild(space5);
+                document.querySelector('#email_details').appendChild(sender);
+                document.querySelector('#email_details').appendChild(space1);
+                document.querySelector('#email_details').appendChild(recipient);
+                document.querySelector('#email_details').appendChild(space2);
+                document.querySelector('#email_details').appendChild(subject);
+                document.querySelector('#email_details').appendChild(space3);
+                document.querySelector('#email_details').appendChild(timestamp);
+                document.querySelector('#email_details').appendChild(space4);
+            });
           }
         }
     })

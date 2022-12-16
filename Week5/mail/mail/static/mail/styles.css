@@ -11,7 +11,7 @@ textarea {
     padding-right: 10px;
 }
 
-.email_details {
+#email_details {
     outline-style: dotted;
     outline-color: #20b510;
     border-radius: 2px;
