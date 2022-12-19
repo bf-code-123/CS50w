@@ -4,13 +4,15 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
-  document.querySelector('#compose').addEventListener('click', compose_email);
+  document.querySelector('#compose').addEventListener('click', () => compose_email());
 
   // By default, load the inbox
   load_mailbox('inbox');
 });
 
-function compose_email() {
+function compose_email(email) {
+
+  email = email || '';
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
@@ -24,6 +26,11 @@ function compose_email() {
   const recipients_field = document.querySelector('#compose-recipients');
   const subject_field = document.querySelector('#compose-subject');
   const body_field = document.querySelector('#compose-body');
+
+  recipients_field.setAttribute("value",`${email.sender}`);
+  subject_field.setAttribute("value",`Re: ${email.subject}`);
+  //can't figure this out
+  body_field.setAttribute("value",`On .. wrote ${email.body}`);
 
 
   // perform these actions when the compose form is submitted:
@@ -55,8 +62,10 @@ function compose_email() {
     subject_field.value = '';
     body_field.value = '';
 
-    //load the mailbox after email successfully sent
-    load_mailbox('inbox');
+    //load the mailbox after email successfully sent (with delay)
+    setTimeout(function(){ 
+      load_mailbox('inbox'); 
+    }, 100);
 
     // Stop form from submitting
     return false;
@@ -129,9 +138,13 @@ function load_mailbox(mailbox) {
           cell.setAttribute("class","col-sm");
           cell.innerHTML = emails[i].sender;
           email.appendChild(cell);
+          // var cell = document.createElement('div');
+          // cell.setAttribute("class","col-sm");
+          // cell.innerHTML = "Subject: ";
+          // email.appendChild(cell);
           var cell = document.createElement('div');
           cell.setAttribute("class","col-sm");
-          cell.innerHTML = emails[i].body;
+          cell.innerHTML = emails[i].subject;
           email.appendChild(cell);  
           var cell = document.createElement('div');
           cell.setAttribute("class","col-sm");
@@ -156,33 +169,53 @@ function load_mailbox(mailbox) {
                 const details = document.createElement('div');
                 details.setAttribute("class", "container");
                 details.setAttribute("id", "email_details");
-                details.innerHTML = ('Here are the email details:');
                 document.querySelector('#email-details-view').appendChild(details);
 
+                //populate email details
                 const sender = document.createElement('text');
                 const recipient = document.createElement('text');
                 const subject = document.createElement('text');
+                const body = document.createElement('text');
                 const timestamp = document.createElement('text');
                 const space1 = document.createElement('br');
                 const space2 = document.createElement('br');
                 const space3 = document.createElement('br');
                 const space4 = document.createElement('br');
                 const space5 = document.createElement('br');
+                const space6 = document.createElement('br');
+                //make reply button
+                const reply_button = document.createElement('button');
+                reply_button.setAttribute("class", "btn btn-sm btn-outline-primary");
+                reply_button.setAttribute("id","reply");
+                reply_button.innerHTML = ("Reply");
+                //space for body
+                const body_space = document.createElement('hr');
 
-                sender.innerHTML = (`Sender: ${email.sender}`);
-                recipient.innerHTML = (`Recipient: ${email.recipients}`);
+                sender.innerHTML = (`From: ${email.sender}`);
+                recipient.innerHTML = (`To: ${email.recipients}`);
                 subject.innerHTML = (`Subject: ${email.subject}`);
+                body.innerHTML = (`Body: ${email.body}`);
                 timestamp.innerHTML = (`Timestamp: ${email.timestamp}`);
                 
-                document.querySelector('#email_details').appendChild(space5);
-                document.querySelector('#email_details').appendChild(sender);
                 document.querySelector('#email_details').appendChild(space1);
-                document.querySelector('#email_details').appendChild(recipient);
+                document.querySelector('#email_details').appendChild(sender);
                 document.querySelector('#email_details').appendChild(space2);
-                document.querySelector('#email_details').appendChild(subject);
+                document.querySelector('#email_details').appendChild(recipient);
                 document.querySelector('#email_details').appendChild(space3);
-                document.querySelector('#email_details').appendChild(timestamp);
+                document.querySelector('#email_details').appendChild(subject);
+    
                 document.querySelector('#email_details').appendChild(space4);
+                document.querySelector('#email_details').appendChild(timestamp);
+                document.querySelector('#email_details').appendChild(space5);
+
+                document.querySelector('#email_details').appendChild(reply_button);
+
+                document.querySelector('#email_details').appendChild(body_space);
+                document.querySelector('#email_details').appendChild(body);
+
+                //reply function
+                document.querySelector('#reply').addEventListener('click', () => compose_email(email));
+
             });
           }
         }
