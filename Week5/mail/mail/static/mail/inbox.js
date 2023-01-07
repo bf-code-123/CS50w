@@ -106,14 +106,32 @@ function load_mailbox(mailbox) {
         // for each email
         for (i = 0; i < emails.length; i++) {
 
-          //make a row
+          //make a row for each email (which will have 2 columns)
           const email = document.createElement('div');
           email.setAttribute("class","row email_box");
           //add to inbox div
           inbox.appendChild(email);
           
+          //make a column for details for each email row
+          const email_info = document.createElement('div');
+          email_info.setAttribute("class","col-10");
+          //add to email row
+          email.appendChild(email_info);
+
+          //adding extra row within the first column in preparation of the three data columns
+          const extra_row = document.createElement('div');
+          extra_row.setAttribute("class","row");
+          //add to email details column
+          email_info.appendChild(extra_row);
+
+          //make a column for details for each email row
+          const archive_button = document.createElement('div');
+          archive_button.setAttribute("class","col");
+          //add to email row
+          email.appendChild(archive_button);
+
           //give div the same ID as the email in the div
-          email.setAttribute("id",emails[i].id);
+          email_info.setAttribute("id",emails[i].id);
 
           //color the div depending on status of read/unread attribute
           if (emails[i].read === true) {
@@ -127,22 +145,25 @@ function load_mailbox(mailbox) {
           var cell = document.createElement('div');
           cell.setAttribute("class","col-sm");
           cell.innerHTML = emails[i].sender;
-          email.appendChild(cell);
-          // var cell = document.createElement('div');
-          // cell.setAttribute("class","col-sm");
-          // cell.innerHTML = "Subject: ";
-          // email.appendChild(cell);
+          extra_row.appendChild(cell);
+
           var cell = document.createElement('div');
           cell.setAttribute("class","col-sm");
           cell.innerHTML = emails[i].subject;
-          email.appendChild(cell);  
+          extra_row.appendChild(cell);  
+
           var cell = document.createElement('div');
           cell.setAttribute("class","col-sm");
           cell.innerHTML = emails[i].timestamp;
-          email.appendChild(cell);
+          extra_row.appendChild(cell);
+          
+          var cell = document.createElement('div');
+          cell.setAttribute("class","btn btn-primary");
+          cell.innerHTML = "Archive"
+          archive_button.appendChild(cell);
 
           //add an event listener to show email details if row is clicked
-          email.onclick = () => {
+          email_info.onclick = () => {
             //hide both other views
             document.querySelector('#compose-view').style.display = 'none';
             document.querySelector('#emails-view').style.display = 'none';
