@@ -1,0 +1,10 @@
+.post {
+    outline-style: solid;
+    outline-color: grey;
+    background-color: blue;
+    text-align: center;
+}
+
+.test {
+    color: brown;
+}
