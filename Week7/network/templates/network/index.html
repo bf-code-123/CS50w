@@ -11,4 +11,11 @@
             <button type="submit" class="btn btn-primary">Post</button>
         </form>
     </div>
+    <br>   
+    <div class="container-lg border p-3">
+        {% for post in posts %}
+        <h3> {{ post.creator }}</h3>
+        <p> {{ post.content }} </p>
+        {% endfor %}
+    </div>
 {% endblock %}
