@@ -3,11 +3,18 @@
 {% block body %}
     <h1>All Posts</h1>
     <div class="container-lg border p-3">
-        <form>
+        <form action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            <!--  old form without django model
             <div class="form-group">
                 <label for="postTextArea">New Post:</label>
                 <textarea class="form-control" id="postTextArea" rows="3"></textarea>
             </div>
+            <button type="submit" class="btn btn-primary">Post</button>
+            -->
+
+            <!-- new form with django model-->
+            <div> <h4>New Post: </h4> {{ form.content }} </div>
             <button type="submit" class="btn btn-primary">Post</button>
         </form>
     </div>
@@ -16,6 +23,7 @@
         {% for post in posts %}
         <h3> {{ post.creator }}</h3>
         <p> {{ post.content }} </p>
+        <p> {{ post.datetime }} </p>
         {% endfor %}
     </div>
 {% endblock %}

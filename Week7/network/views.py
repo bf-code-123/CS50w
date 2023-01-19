@@ -4,14 +4,38 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django import forms
+from django.forms import ModelForm, Textarea
 
 from .models import User, Post
 
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        exclude = ['creator','datetime']
+        # TODO: fix the column number
+        widgets = {
+            'content': Textarea(attrs={'cols': 132, 'rows': 3}),
+        }
+
 
 def index(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        #store data from New Post form into a variable
+        if form.is_valid():
+            new_post = form.save(commit=False)
+            #save it into a variable but don't commit (so it's editable)
+            new_post.creator = request.user
+            #insert current user as creator value 
+            new_post.save()
+            #save new data entry
+            return HttpResponseRedirect(reverse('index'))
+            #send to index page)
     posts = Post.objects.all()
     return render(request, "network/index.html", {
-        "posts" : posts
+        "posts" : posts,
+        "form" : PostForm()
     })
 
 
