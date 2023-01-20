@@ -38,6 +38,10 @@ def index(request):
         "form" : PostForm()
     })
 
+def user(request, user_name):
+    return render(request, "network/user.html", {
+        "user_name" : user_name
+    })
 
 def login_view(request):
     if request.method == "POST":
