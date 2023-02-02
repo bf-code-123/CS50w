@@ -1,29 +1,30 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
     <h1>All Posts</h1>
     <div class="container-lg border p-3">
         <form action="{% url 'index' %}" method="post">
             {% csrf_token %}
-            <!--  old form without django model
-            <div class="form-group">
-                <label for="postTextArea">New Post:</label>
-                <textarea class="form-control" id="postTextArea" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Post</button>
-            -->
-
             <!-- new form with django model-->
             <div> <h4>New Post: </h4> {{ form.content }} </div>
             <button type="submit" class="btn btn-primary">Post</button>
         </form>
     </div>
     <br>   
-    <div class="container-lg border p-3">
+    <div>
         {% for post in posts %}
-        <h3><a href="{% url 'user' post.creator %}">{{ post.creator }}</a></h3>
-        <p> {{ post.content }} </p>
-        <p> {{ post.datetime }} </p>
+        <div class="container-lg border p-3">
+            <h3><a href="{% url 'user' post.creator %}">{{ post.creator }}</a></h3>
+            <p id="post_content"> {{ post.content }} </p>
+            <p> {{ post.datetime }} </p>
+            <button onclick="edit_text()">Edit</button>
+        </div>
+        <br>
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/twitter.js' %}"></script>
 {% endblock %}

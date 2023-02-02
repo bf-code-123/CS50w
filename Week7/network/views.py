@@ -32,7 +32,7 @@ def index(request):
             #save new data entry
             return HttpResponseRedirect(reverse('index'))
             #send to index page)
-    posts = Post.objects.all()
+    posts = reversed(Post.objects.all())
     return render(request, "network/index.html", {
         "posts" : posts,
         "form" : PostForm()
