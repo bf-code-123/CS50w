@@ -6,6 +6,9 @@ from django.shortcuts import render
 from django.urls import reverse
 from django import forms
 from django.forms import ModelForm, Textarea
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 from .models import User, Post
 
@@ -19,24 +22,58 @@ class PostForm(forms.ModelForm):
         }
 
 
+# def index(request):
+#     if request.method == "POST":
+#         form = PostForm(request.POST)
+#         #store data from New Post form into a variable
+#         if form.is_valid():
+#             new_post = form.save(commit=False)
+#             #save it into a variable but don't commit (so it's editable)
+#             new_post.creator = request.user
+#             #insert current user as creator value 
+#             new_post.save()
+#             #save new data entry
+#             return HttpResponseRedirect(reverse('index'))
+#             #send to index page)
+#     posts = reversed(Post.objects.all())
+#     return render(request, "network/index.html", {
+#         "posts" : posts,
+#         "form" : PostForm()
+#     })
+
 def index(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        #store data from New Post form into a variable
-        if form.is_valid():
-            new_post = form.save(commit=False)
-            #save it into a variable but don't commit (so it's editable)
-            new_post.creator = request.user
-            #insert current user as creator value 
-            new_post.save()
-            #save new data entry
-            return HttpResponseRedirect(reverse('index'))
-            #send to index page)
-    posts = reversed(Post.objects.all())
-    return render(request, "network/index.html", {
+    # Authenticated users view the feed
+    if request.user.is_authenticated:
+        posts = reversed(Post.objects.all())
+        return render(request, "network/index.html", {
         "posts" : posts,
         "form" : PostForm()
     })
+    # Everyone else is prompted to sign in
+    else:
+        return HttpResponseRedirect(reverse("login"))
+
+@csrf_exempt
+@login_required
+def post(request):
+    # Creating a new post must be via POST request
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    # Check recipient emails
+    data = json.loads(request.body)
+
+    # Get contents of email
+    content = data.get("content", "")
+
+    #create new post in Django model
+    post = Post(
+            content=content,
+            creator=request.user
+        )
+    post.save()
+
+    return JsonResponse({"message": "Email sent successfully."}, status=201)
 
 def user(request, user_name):
     return render(request, "network/user.html", {

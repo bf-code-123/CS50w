@@ -4,10 +4,12 @@
 {% block body %}
     <h1>All Posts</h1>
     <div class="container-lg border p-3">
-        <form action="{% url 'index' %}" method="post">
-            {% csrf_token %}
+        <form id="post-form">
             <!-- new form with django model-->
-            <div> <h4>New Post: </h4> {{ form.content }} </div>
+            <div> 
+                <h4>New Post: </h4> 
+                <div id="post-content"> {{ form }} </div>
+            </div>
             <button type="submit" class="btn btn-primary">Post</button>
         </form>
     </div>
