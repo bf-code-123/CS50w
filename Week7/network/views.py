@@ -46,8 +46,7 @@ def index(request):
     if request.user.is_authenticated:
         posts = reversed(Post.objects.all())
         return render(request, "network/index.html", {
-        "posts" : posts,
-        "form" : PostForm()
+        "posts" : posts
     })
     # Everyone else is prompted to sign in
     else:
@@ -60,11 +59,11 @@ def post(request):
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
 
-    # Check recipient emails
+    # Check JSON body sent from fetch request
     data = json.loads(request.body)
 
-    # Get contents of email
-    content = data.get("content", "")
+    # Get contents of post
+    content = data.get("content")
 
     #create new post in Django model
     post = Post(

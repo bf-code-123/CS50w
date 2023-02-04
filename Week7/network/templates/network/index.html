@@ -7,10 +7,11 @@
         <form id="post-form">
             <!-- new form with django model-->
             <div> 
-                <h4>New Post: </h4> 
-                <div id="post-content"> {{ form }} </div>
+                <label for="placeholder" class="form-label"><h4>New Post</h4></label> 
+                <textarea id="post-content" class="form-control" ></textarea>
+                <br>
             </div>
-            <button type="submit" class="btn btn-primary">Post</button>
+            <input type="submit" class="btn btn-primary">
         </form>
     </div>
     <br>   
