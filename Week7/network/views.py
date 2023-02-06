@@ -72,7 +72,37 @@ def post(request):
         )
     post.save()
 
-    return JsonResponse({"message": "Email sent successfully."}, status=201)
+    return JsonResponse({"message": "Post created successfully."}, status=201)
+
+# @csrf_exempt
+# @login_required
+# def one_post(request):
+
+#     # Query for requested email
+#     try:
+#         post = Post.objects.all()
+#     except Post.DoesNotExist:
+#         return JsonResponse({"error": "Post not found."}, status=404)
+
+#     # Return email contents
+#     if request.method == "GET":
+#         return JsonResponse(post.serialize())
+
+#     # load the request int
+#     elif request.method == "PUT":
+#         return HttpResponse(status=204)
+
+#     # Post must be via GET or PUT
+#     else:
+#         return JsonResponse({
+#             "error": "GET or PUT request required."
+#         }, status=400)
+
+@login_required
+def load(request):
+    posts = Post.objects.all()
+    posts = posts.order_by("-datetime").all()
+    return JsonResponse([post.serialize() for post in posts], safe=False)
 
 def user(request, user_name):
     return render(request, "network/user.html", {
@@ -98,11 +128,9 @@ def login_view(request):
     else:
         return render(request, "network/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":

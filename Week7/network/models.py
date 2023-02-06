@@ -12,6 +12,14 @@ class Post(models.Model):
     datetime = models.DateTimeField(blank=False, default=datetime.now)
     #related name allows to search for all posts for a given user
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "creator": self.creator,
+            "datetime": self.datetime
+        }
+
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="likes", default="")
     listing = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes", default="")

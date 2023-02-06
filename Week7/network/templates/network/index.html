@@ -15,17 +15,22 @@
         </form>
     </div>
     <br>   
+    <div id="post_view">
+
+    </div>
+    <!---
     <div>
         {% for post in posts %}
         <div class="container-lg border p-3">
             <h3><a href="{% url 'user' post.creator %}">{{ post.creator }}</a></h3>
             <p id="post_content"> {{ post.content }} </p>
             <p> {{ post.datetime }} </p>
-            <button onclick="edit_text()">Edit</button>
+            <button id="edit" onclick="edit_text()">Edit</button>
         </div>
         <br>
         {% endfor %}
     </div>
+    -->
 {% endblock %}
 
 {% block script %}
