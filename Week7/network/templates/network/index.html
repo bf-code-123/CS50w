@@ -4,22 +4,30 @@
 {% block body %}
     <h1>All Posts</h1>
     <div class="container-lg border p-3">
-        <form id="post-form">
+        <form>
             <!-- new form with django model-->
+            <!-- <div>
+                <h4>New Post: </h4> 
+                <div id="post-content"> {{ form.content }} </div>
+            </div> -->
+            <!--form with manual textarea-->
             <div> 
-                <label for="placeholder" class="form-label"><h4>New Post</h4></label> 
-                <textarea id="post-content" class="form-control" ></textarea>
+                <label for="placeholder" class="form-label"><h4>New Post: </h4></label> 
+                <textarea id="post-content" class="form-control" required placeholder="New Post Text"></textarea>
                 <br>
             </div>
-            <input type="submit" class="btn btn-primary">
+            <input id="post-submit" type="submit" class="btn btn-primary">
         </form>
     </div>
-    <br>   
-    <div id="post_view">
+    <br> 
 
+    <!-- new way to generate posts using javascript-->
+    <div id="post_view">
     </div>
-    <!---
-    <div>
+
+    <!--- old way to generate the posts using django -->
+    
+    <!-- <div>
         {% for post in posts %}
         <div class="container-lg border p-3">
             <h3><a href="{% url 'user' post.creator %}">{{ post.creator }}</a></h3>
@@ -29,8 +37,8 @@
         </div>
         <br>
         {% endfor %}
-    </div>
-    -->
+    </div> -->
+    
 {% endblock %}
 
 {% block script %}

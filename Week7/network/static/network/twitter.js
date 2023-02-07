@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     load_posts();
   
     // perform these actions when the compose form is submitted:
-    document.querySelector('#post-form').addEventListener('click', () => new_post());
+    document.querySelector('#post-submit').addEventListener('click', () => new_post());
 
-    document.querySelector('#edit').addEventListener('click', () => edit_text());
+    //document.querySelector('#edit').addEventListener('click', () => edit_text());
 
 });
 
@@ -48,45 +48,44 @@ function load_posts() {
 
     fetch('/load')
 
+    //TODO: redo with ForEach
     .then(response => response.json())
     .then(posts => {
         // Print posts
         console.log(posts);
 
         // for each post
-        for (i = 0; i < posts.length; i++) {
+        posts.forEach(post => {
             //make a row for each post
-            const post = document.createElement('div');
-            post.setAttribute("class","container-lg border p-3");
+            const post_container = document.createElement('div');
+            post_container.setAttribute("class","container-lg border p-3");
             //add to all posts div
-            all_posts.appendChild(post);
+            all_posts.appendChild(post_container);
 
             //populate the table in each row
             var cell = document.createElement('div');
             cell.setAttribute("class","col-sm");
-            cell.innerHTML = post[i].creator;
-            post.appendChild(cell);
+            cell.innerHTML = post.creator;
+            post_container.appendChild(cell);
 
             var cell = document.createElement('div');
             cell.setAttribute("class","col-sm");
-            cell.innerHTML = post[i].content;
-            post.appendChild(cell);  
+            cell.innerHTML = post.content;
+            post_container.appendChild(cell);  
 
             var cell = document.createElement('div');
             cell.setAttribute("class","col-sm");
-            cell.innerHTML = emails[i].datetime;
-            post.appendChild(cell);
+            cell.innerHTML = post.datetime;
+            post_container.appendChild(cell);
             
             const edit_button = document.createElement('div');
             edit_button.setAttribute("class","btn btn-primary");
             //edit_button.setAttribute("id",emails[i].id)
             edit_button.innerHTML = "Edit"
-            post.appendChild(edit_button);
-            }
-
-        })
-
-    }
+            post_container.appendChild(edit_button);
+        });
+    })
+}
 
 function edit_text() {
     const content = document.querySelector("#post_content");

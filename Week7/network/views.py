@@ -44,10 +44,9 @@ class PostForm(forms.ModelForm):
 def index(request):
     # Authenticated users view the feed
     if request.user.is_authenticated:
-        posts = reversed(Post.objects.all())
         return render(request, "network/index.html", {
-        "posts" : posts
-    })
+            #"form" : PostForm()
+        })
     # Everyone else is prompted to sign in
     else:
         return HttpResponseRedirect(reverse("login"))
@@ -65,13 +64,17 @@ def post(request):
     # Get contents of post
     content = data.get("content")
 
-    #create new post in Django model
-    post = Post(
-            content=content,
-            creator=request.user
-        )
-    post.save()
-
+    # if content is blank, return error so model does not save
+    if content == "":
+        return JsonResponse({"error": "Text required."}, status=400)
+    else:
+        #create new post in Django model
+        post = Post(
+                content=content,
+                creator=request.user
+            )
+        post.save()
+        
     return JsonResponse({"message": "Post created successfully."}, status=201)
 
 # @csrf_exempt
@@ -102,6 +105,7 @@ def post(request):
 def load(request):
     posts = Post.objects.all()
     posts = posts.order_by("-datetime").all()
+    #posts = [post.serialize() for post in Post.objects.order_by('-datetime')]
     return JsonResponse([post.serialize() for post in posts], safe=False)
 
 def user(request, user_name):

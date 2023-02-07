@@ -7,7 +7,7 @@ class User(AbstractUser):
     pass
 
 class Post(models.Model):
-    content = models.CharField(max_length=256)
+    content = models.CharField(max_length=256, blank=False)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="posts", default="")
     datetime = models.DateTimeField(blank=False, default=datetime.now)
     #related name allows to search for all posts for a given user
@@ -16,8 +16,8 @@ class Post(models.Model):
         return {
             "id": self.id,
             "content": self.content,
-            "creator": self.creator,
-            "datetime": self.datetime
+            "creator": self.creator.username,
+            "datetime": self.datetime.strftime("%b %d %Y, %I:%M %p")
         }
 
 class Like(models.Model):
