@@ -58,28 +58,28 @@ function load_posts() {
         posts.forEach(post => {
             //make a row for each post
             const post_container = document.createElement('div');
-            post_container.setAttribute("class","container-lg border p-3");
+            post_container.setAttribute("class","container-lg border p-3 post2");
             //add to all posts div
             all_posts.appendChild(post_container);
 
             //populate the table in each row
             var cell = document.createElement('div');
-            cell.setAttribute("class","col-sm");
+            cell.setAttribute("class","col-sm info bold");
             cell.innerHTML = post.creator;
             post_container.appendChild(cell);
 
             var cell = document.createElement('div');
-            cell.setAttribute("class","col-sm");
+            cell.setAttribute("class","col-sm info content");
             cell.innerHTML = post.content;
             post_container.appendChild(cell);  
 
             var cell = document.createElement('div');
-            cell.setAttribute("class","col-sm");
+            cell.setAttribute("class","col-sm info small");
             cell.innerHTML = post.datetime;
             post_container.appendChild(cell);
             
             const edit_button = document.createElement('div');
-            edit_button.setAttribute("class","btn btn-primary");
+            edit_button.setAttribute("class","btn btn-primary info");
             //edit_button.setAttribute("id",emails[i].id)
             edit_button.innerHTML = "Edit"
             post_container.appendChild(edit_button);
