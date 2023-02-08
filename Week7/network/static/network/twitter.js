@@ -39,6 +39,7 @@ function new_post() {
 }
 
 function load_posts() {
+    console.log("load posts successful");
     //clear the post details
     document.querySelectorAll('#post_view').innerHTML = '';
 
@@ -146,13 +147,11 @@ function edit_text(event) {
 
                 setTimeout(function(){ 
                     load_posts(); 
+                    console.log("TIMEOUT SUCCESSFUL");
                 }, 100);
 
                 // Stop form from submitting
                 return false;
             });
-
-            //TODO: update to show the newest posts
-            load_posts();
         }
 }
