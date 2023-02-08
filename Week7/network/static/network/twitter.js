@@ -133,7 +133,8 @@ function edit_text(event) {
                 fetch('/edit', {
                     method: 'POST',
                     body: JSON.stringify({
-                        content: content
+                        content: content,
+                        id : id
                     })
                 })
 
@@ -143,9 +144,6 @@ function edit_text(event) {
                     console.log(result);
                 });
 
-                // Clear out composition fields
-                content = '';
-
                 setTimeout(function(){ 
                     load_posts(); 
                 }, 100);
@@ -153,5 +151,8 @@ function edit_text(event) {
                 // Stop form from submitting
                 return false;
             });
+
+            //TODO: update to show the newest posts
+            load_posts();
         }
 }

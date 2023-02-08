@@ -8,6 +8,7 @@ from django import forms
 from django.forms import ModelForm, Textarea
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
 import json
 
 from .models import User, Post
@@ -21,25 +22,6 @@ class PostForm(forms.ModelForm):
             'content': Textarea(attrs={'cols': 132, 'rows': 3}),
         }
 
-
-# def index(request):
-#     if request.method == "POST":
-#         form = PostForm(request.POST)
-#         #store data from New Post form into a variable
-#         if form.is_valid():
-#             new_post = form.save(commit=False)
-#             #save it into a variable but don't commit (so it's editable)
-#             new_post.creator = request.user
-#             #insert current user as creator value 
-#             new_post.save()
-#             #save new data entry
-#             return HttpResponseRedirect(reverse('index'))
-#             #send to index page)
-#     posts = reversed(Post.objects.all())
-#     return render(request, "network/index.html", {
-#         "posts" : posts,
-#         "form" : PostForm()
-#     })
 
 def index(request):
     # Authenticated users view the feed
@@ -89,6 +71,7 @@ def edit(request):
 
     # Get contents of post
     content = data.get("content")
+    id = data.get("id")
 
     # if content is blank, return error so model does not save
     if content == "":
@@ -96,14 +79,10 @@ def edit(request):
     else:
         #create new post in Django model
         post = Post.objects.get(id=id)
-        #TODO ONCE I GET THE POST, UPDATE THE CONTENT
-        post = Post(
-                content=content,
-                creator=request.user
-            )
+        post.content = content
         post.save()
         
-    return JsonResponse({"message": "Post created successfully."}, status=201)
+    return JsonResponse({"message": "Post edited successfully."}, status=201)
 
 @login_required
 def load(request):
