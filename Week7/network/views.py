@@ -74,32 +74,36 @@ def post(request):
                 creator=request.user
             )
         post.save()
-        
+
     return JsonResponse({"message": "Post created successfully."}, status=201)
 
-# @csrf_exempt
-# @login_required
-# def one_post(request):
+@csrf_exempt
+@login_required
+def edit(request):
+    # Creating a new post must be via POST request
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
 
-#     # Query for requested email
-#     try:
-#         post = Post.objects.all()
-#     except Post.DoesNotExist:
-#         return JsonResponse({"error": "Post not found."}, status=404)
+    # Check JSON body sent from fetch request
+    data = json.loads(request.body)
 
-#     # Return email contents
-#     if request.method == "GET":
-#         return JsonResponse(post.serialize())
+    # Get contents of post
+    content = data.get("content")
 
-#     # load the request int
-#     elif request.method == "PUT":
-#         return HttpResponse(status=204)
-
-#     # Post must be via GET or PUT
-#     else:
-#         return JsonResponse({
-#             "error": "GET or PUT request required."
-#         }, status=400)
+    # if content is blank, return error so model does not save
+    if content == "":
+        return JsonResponse({"error": "Text required."}, status=400)
+    else:
+        #create new post in Django model
+        post = Post.objects.get(id=id)
+        #TODO ONCE I GET THE POST, UPDATE THE CONTENT
+        post = Post(
+                content=content,
+                creator=request.user
+            )
+        post.save()
+        
+    return JsonResponse({"message": "Post created successfully."}, status=201)
 
 @login_required
 def load(request):
