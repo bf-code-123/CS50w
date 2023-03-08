@@ -41,7 +41,7 @@ function new_post() {
 function load_posts() {
     console.log("load posts successful");
     //clear the post details
-    document.querySelectorAll('#post_view').innerHTML = '';
+    document.querySelector('#post_view').innerHTML = '';
 
     //create the post container parent div
     var all_posts = document.createElement('div');
@@ -148,7 +148,7 @@ function edit_text(event) {
                 setTimeout(function(){ 
                     load_posts(); 
                     console.log("TIMEOUT SUCCESSFUL");
-                }, 100);
+                }, 10);
 
                 // Stop form from submitting
                 return false;
