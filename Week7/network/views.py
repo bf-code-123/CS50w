@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 import json
 
-from .models import User, Post
+from .models import User, Post, Like
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -21,7 +21,6 @@ class PostForm(forms.ModelForm):
         widgets = {
             'content': Textarea(attrs={'cols': 132, 'rows': 3}),
         }
-
 
 def index(request):
     # Authenticated users view the feed
@@ -62,7 +61,7 @@ def post(request):
 @csrf_exempt
 @login_required
 def edit(request):
-    # Creating a new post must be via POST request
+    # Editing a post must be via POST request
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
 
@@ -83,6 +82,32 @@ def edit(request):
         post.save()
         
     return JsonResponse({"message": "Post edited successfully."}, status=201)
+
+@csrf_exempt
+@login_required
+def like(request):
+    # Liking a post must be via POST request
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    # Check JSON body sent from fetch request
+    data = json.loads(request.body)
+
+    # Get contents of post
+    id = data.get("id")
+
+    # if content is blank, return error so model does not save
+    if id == "":
+        return JsonResponse({"error": "Text required."}, status=400)
+    else:
+        #create new post in Django model
+        like = Like(
+                post=Post.objects.get(id=id),
+                user=request.user
+            )
+        like.save()
+
+    return JsonResponse({"message": "Post liked successfully."}, status=201)
 
 @login_required
 def load(request):

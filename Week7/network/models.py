@@ -22,7 +22,7 @@ class Post(models.Model):
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="likes", default="")
-    listing = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes", default="")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes", default="")
 
 class Comment(models.Model):
     comment = models.CharField(max_length=128)

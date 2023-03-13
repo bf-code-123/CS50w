@@ -81,7 +81,14 @@ function load_posts() {
             cell.setAttribute("class","col-sm info small");
             cell.innerHTML = post.datetime;
             post_container.appendChild(cell);
+
+            const like_button = document.createElement('div');
+            like_button.setAttribute("class","btn btn-primary info");
+            like_button.setAttribute("id", "like-button");
+            like_button.innerHTML = "Like"
+            post_container.appendChild(like_button);
             
+            //TODO: authenticate current user = post user
             const edit_button = document.createElement('div');
             edit_button.setAttribute("class","btn btn-primary info");
             edit_button.setAttribute("id", "edit-button");
@@ -147,11 +154,39 @@ function edit_text(event) {
 
                 setTimeout(function(){ 
                     load_posts(); 
-                    console.log("TIMEOUT SUCCESSFUL");
                 }, 10);
 
                 // Stop form from submitting
                 return false;
             });
+        }
+
+        if (element.id === 'like-button') {
+            //save the ID of the parent element (the post)
+            const id = element.parentElement.id;
+            console.log(id);
+            console.log(id);
+            console.log("testingggg");
+
+            // Create a JSON object using the form's filled out values and POST it to the /post route using fetch
+            fetch('/like', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id : id
+                })
+            })
+
+            .then(response => response.json())
+            .then(result => {
+                // Print result
+                console.log(result);
+            });
+
+            setTimeout(function(){ 
+                load_posts(); 
+            }, 10);
+
+            // Stop form from submitting
+            return false;
         }
 }
