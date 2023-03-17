@@ -113,7 +113,6 @@ def like(request):
 def load(request):
     posts = Post.objects.all()
     posts = posts.order_by("-datetime").all()
-    #posts = [post.serialize() for post in Post.objects.order_by('-datetime')]
     return JsonResponse([post.serialize() for post in posts], safe=False)
 
 def user(request, user_name):

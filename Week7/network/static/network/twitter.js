@@ -82,6 +82,11 @@ function load_posts() {
             cell.innerHTML = post.datetime;
             post_container.appendChild(cell);
 
+            var cell = document.createElement('div');
+            cell.setAttribute("class","col-sm info small");
+            cell.innerHTML = post.likes.count();
+            post_container.appendChild(cell);
+
             const like_button = document.createElement('div');
             like_button.setAttribute("class","btn btn-primary info");
             like_button.setAttribute("id", "like-button");
@@ -164,9 +169,6 @@ function edit_text(event) {
         if (element.id === 'like-button') {
             //save the ID of the parent element (the post)
             const id = element.parentElement.id;
-            console.log(id);
-            console.log(id);
-            console.log("testingggg");
 
             // Create a JSON object using the form's filled out values and POST it to the /post route using fetch
             fetch('/like', {
